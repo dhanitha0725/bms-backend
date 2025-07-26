@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using bms.Application.Behaviors;
+using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
 using MediatR;
 
@@ -23,8 +24,8 @@ namespace bms.Application
             //services.AddAutoMapper(assembly);
 
             // register pipeline behaviors
-            //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
-            //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingPipelineBehavior<,>));
 
             return services;
         }

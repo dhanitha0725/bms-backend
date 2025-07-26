@@ -17,10 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\bms.Application\bms.Application.csproj" />
     <ProjectReference Include="..\bms.Domain\bms.Domain.csproj" />
     <ProjectReference Include="..\bms.Infrastrcture\bms.Infrastructure.csproj" />

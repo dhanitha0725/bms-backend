@@ -1,8 +1,15 @@
-﻿using System.Text;
+﻿using bms.Application.Abstractions.Interfaces;
+using bms.Infrastructure.Auth;
+using bms.Infrastructure.DbContexts;
+using bms.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using bms.Domain.Entities;
 
 namespace bms.Infrastructure
 {
@@ -10,8 +17,20 @@ namespace bms.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+            // Add DbContext
+            services.AddDbContext<BookDbContext>(options =>
+                options.UseInMemoryDatabase("BookDatabase")); 
 
+            // Register repositories
+            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+            
+            // Register JWT service
+            services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+            // Add password hasher for User entity
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+            // JWT Authentication configuration
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
