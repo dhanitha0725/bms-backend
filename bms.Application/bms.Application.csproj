@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Abstractions\Interfaces\" />
     <Folder Include="Features\" />
   </ItemGroup>
 
