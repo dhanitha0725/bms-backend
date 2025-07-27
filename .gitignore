@@ -361,3 +361,43 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Additional .NET 8 / ASP.NET Core specific files
+*.runtimeconfig.json
+*.deps.json
+*.dll.config
+*.exe.config
+
+# Entity Framework migrations (if auto-generated)
+# Uncomment if you don't want to track migrations
+# Migrations/
+
+# IIS Express configuration
+.vs/config/applicationhost.config
+iisexpress/
+
+# ASP.NET Core specific
+launchSettings.json
+
+# Swagger/OpenAPI generated files
+swagger.json
+swagger.yaml
+
+# Hot Reload files
+*.rsp
+*.tmp
+
+# Seq server data (if running locally)
+seq-data/
+
+# Certificate files
+*.pfx
+*.p12
+*.key
+*.crt
+*.cer
+
+# Environment-specific appsettings (already covered but worth mentioning)
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
