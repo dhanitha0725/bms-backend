@@ -1,0 +1,34 @@
+﻿using bms.Application.Abstractions.Interfaces;
+using bms.Domain.Common;
+using bms.Domain.Entities;
+using MediatR;
+using Serilog;
+
+namespace bms.Application.Features.AddBook
+{
+    public class AddBookCommandHandler(
+        IGenericRepository<Book, Guid> bookRepository,
+        IGenericRepository<User, Guid> userRepository,
+        ILogger logger) 
+        : IRequestHandler<AddBookCommand, Result<Guid>>
+    {
+        public async Task<Result<Guid>> Handle(
+            AddBookCommand request, 
+            CancellationToken cancellationToken)
+        {
+            // Create the book entity
+            var book = new Book
+            {
+                Title = request.Title,
+                Author = request.Author,
+                PublishedYear = request.PublishedYear,
+                Genre = request.Genre,
+            };
+
+            // Add the book to repository
+            await bookRepository.AddAsync(book, cancellationToken);
+
+            return Result<Guid>.Success(book.Id);
+        }
+    }
+}

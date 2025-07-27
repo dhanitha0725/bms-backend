@@ -7,10 +7,12 @@ namespace bms.Application.Features.UserLogin
         public LoginCommandValidator()
         {
             RuleFor(x => x.Username)
-                .NotEmpty().WithMessage("Username is required.");
+                .NotEmpty()
+                .WithMessage("Username is required.");
 
             RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password is required.");
+                .NotEmpty()
+                .WithMessage("Password is required.");
         }
     }
 }
