@@ -13,6 +13,7 @@ namespace bms.Infrastructure.Repositories
             public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
             {
                 await context.Set<T>().AddAsync(entity, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return entity;
             }
 
@@ -22,6 +23,7 @@ namespace bms.Infrastructure.Repositories
                 if (entity != null)
                 {
                     context.Set<T>().Remove(entity);
+                    await context.SaveChangesAsync(cancellationToken); 
                 }
             }
 
@@ -33,6 +35,7 @@ namespace bms.Infrastructure.Repositories
             public async Task<T?> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
             {
                 await context.Set<T>().AddRangeAsync(entities, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken); 
                 return entities.FirstOrDefault();
             }
 
@@ -51,10 +54,10 @@ namespace bms.Infrastructure.Repositories
                 return await context.Set<T>().FindAsync([id], cancellationToken);
             }
 
-            public Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
+            public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
             {
                 context.Set<T>().Update(entity);
-                return Task.CompletedTask;
+                await context.SaveChangesAsync(cancellationToken);
             }
 
             public async Task<T?> GetByIdWithQueryAsync(Func<IQueryable<T>, IQueryable<T>> queryBuilder, CancellationToken cancellationToken = default)
