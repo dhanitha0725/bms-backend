@@ -19,13 +19,15 @@ namespace bms.Application.Features.AddBook
             // Create the book entity
             var book = new Book
             {
+                Id = Guid.NewGuid(),
                 Title = request.Title,
                 Author = request.Author,
                 PublishedYear = request.PublishedYear,
                 Genre = request.Genre,
+             
             };
 
-            // Add the book to repository
+            // Add the book
             await bookRepository.AddAsync(book, cancellationToken);
 
             return Result<Guid>.Success(book.Id);

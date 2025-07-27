@@ -1,4 +1,5 @@
 using bms.Application.Features.AddBook;
+using bms.Application.Features.GetAllBooks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +20,21 @@ namespace bmsAPI.Controllers
                 return BadRequest(result.Error?.Message);
             }
 
-            return Ok(new { token = result.Value });
+            return Ok(new { bookId = result.Value });
         }
 
-    }
+        [HttpGet("get-all-books")]
+        public async Task<IActionResult> GetAllBooks()
+        {
+            var query = new GetAllBooksQuery();
+            var result = await mediator.Send(query);
 
+            if (result.IsFailure)
+            {
+                return BadRequest(new { error = result.Error?.Message });
+            }
+
+            return Ok(result.Value);
+        }
+    }
 }
