@@ -33,7 +33,6 @@ namespace bms.Application.Features.GetAllBooks
                     Author = book.Author,
                     PublishedYear = book.PublishedYear,
                     Genre = book.Genre,
-                    UserId = book.UserId
                 });
 
                 return Result<List<BookDto>>.Success(bookDtos.ToList());

@@ -1,7 +1,10 @@
 using bms.Application.Features.AddBook;
+using bms.Application.Features.DeleteBook;
 using bms.Application.Features.GetAllBooks;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace bmsAPI.Controllers
 {
@@ -36,5 +39,27 @@ namespace bmsAPI.Controllers
 
             return Ok(result.Value);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBook(Guid id)
+        {
+
+            var command = new DeleteBookCommand
+            {
+                BookId = id
+            };
+
+            var result = await mediator.Send(command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(new { error = result.Error?.Message });
+            }
+
+            return Ok(new { message = "Book deleted successfully" });
+        }
+
+
     }
+
 }

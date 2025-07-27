@@ -14,6 +14,5 @@ namespace bms.Application.Features.GetAllBooks
         public string Author { get; set; }
         public int PublishedYear { get; set; }
         public string Genre { get; set; }
-        public Guid UserId { get; set; }
     }
 }
