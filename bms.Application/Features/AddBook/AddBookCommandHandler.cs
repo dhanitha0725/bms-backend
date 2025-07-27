@@ -16,21 +16,29 @@ namespace bms.Application.Features.AddBook
             AddBookCommand request, 
             CancellationToken cancellationToken)
         {
-            // Create the book entity
-            var book = new Book
+            try
             {
-                Id = Guid.NewGuid(),
-                Title = request.Title,
-                Author = request.Author,
-                PublishedYear = request.PublishedYear,
-                Genre = request.Genre,
-             
-            };
+                // Create the book entity
+                var book = new Book
+                {
+                    Id = Guid.NewGuid(),
+                    Title = request.Title,
+                    Author = request.Author,
+                    PublishedYear = request.PublishedYear,
+                    Genre = request.Genre,
 
-            // Add the book
-            await bookRepository.AddAsync(book, cancellationToken);
+                };
 
-            return Result<Guid>.Success(book.Id);
+                // Add the book
+                await bookRepository.AddAsync(book, cancellationToken);
+
+                return Result<Guid>.Success(book.Id);
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "An error occurred while adding a book: {Title}", request.Title);
+                return Result<Guid>.Failure(new Error("An error occurred while adding the book."));
+            }
         }
     }
 }

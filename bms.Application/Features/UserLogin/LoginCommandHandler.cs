@@ -18,25 +18,36 @@ namespace bms.Application.Features.UserLogin
             LoginCommand request, 
             CancellationToken cancellationToken)
         {
-            // get user by username
-            var users = await userRepository
-                .GetAllAsync(u => u.Username == request.Username, cancellationToken);
-            var user = users.FirstOrDefault();
+            try
+            {
+                // get user by username
+                var users = await userRepository
+                    .GetAllAsync(u => u.Username == request.Username, cancellationToken);
+                var user = users.FirstOrDefault();
 
-            // validate user and password
-            if (user == null)
-            {
-                logger.Information("User not found: {Username}", request.Username);
-                return Result<string>.Failure(new Error("Invalid password or username"));
+                // validate user and password
+                if (user == null)
+                {
+                    logger.Information("User not found: {Username}", request.Username);
+                    return Result<string>.Failure(new Error("Invalid password or username"));
+                }
+
+                var passwordVerificationResult =
+                    passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
+                if (passwordVerificationResult != PasswordVerificationResult.Success)
+                {
+                    logger.Information("Invalid password for user: {Username}", request.Username);
+                    return Result<string>.Failure(new Error("Invalid password or username"));
+                }
+
+                var token = jwt.GenerateJwtToken(user);
+                return Result<string>.Success(token);
             }
-            var passwordVerificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.Password);
-            if (passwordVerificationResult != PasswordVerificationResult.Success)
+            catch (Exception e)
             {
-                logger.Information("Invalid password for user: {Username}", request.Username);
-                return Result<string>.Failure(new Error("Invalid password or username"));
+                logger.Error(e, "An error occurred while logging in the user: {Username}", request.Username);
+                return Result<string>.Failure(new Error("An error occurred while logging in the user."));
             }
-            var token = jwt.GenerateJwtToken(user);
-            return Result<string>.Success(token);
         }
     }
 }

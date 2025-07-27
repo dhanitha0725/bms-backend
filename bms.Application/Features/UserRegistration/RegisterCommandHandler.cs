@@ -16,23 +16,30 @@ namespace bms.Application.Features.UserRegistration
             RegisterCommand request, 
             CancellationToken cancellationToken)
         {
-            if (await useRepository.ExistsAsync(u => u.Username == request.Username, cancellationToken))
+            try
             {
-                return Result<string>.Failure(new Error("User with this email already exists."));
+                if (await useRepository.ExistsAsync(u => u.Username == request.Username, cancellationToken))
+                {
+                    return Result<string>.Failure(new Error("User with this Username already exists."));
+                }
+
+                var user = new User
+                {
+                    Username = request.Username,
+                };
+
+                user.PasswordHash = passwordHasher.HashPassword(user, request.Password);
+
+                await useRepository.AddAsync(user, cancellationToken);
+
+                var token = jwt.GenerateJwtToken(user);
+
+                return Result<string>.Success(token);
             }
-
-            var user = new User
+            catch (Exception e)
             {
-                Username = request.Username,
-            };
-
-            user.PasswordHash = passwordHasher.HashPassword(user, request.Password);
-
-            await useRepository.AddAsync(user, cancellationToken);
-
-            var token = jwt.GenerateJwtToken(user);
-
-            return Result<string>.Success(token);
+                return Result<string>.Failure(new Error("An error occurred while registering the user."));
+            }
         }
     }
 }
