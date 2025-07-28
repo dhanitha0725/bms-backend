@@ -6,13 +6,12 @@ using bms.Application.Features.UpdateBook;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace bmsAPI.Controllers
 {
     [ApiController]
     [Route("api/books")]
-    //[Authorize]
+    [Authorize]
     public class BooksController(IMediator mediator) : ControllerBase
     {
         [HttpPost("add-book")]
