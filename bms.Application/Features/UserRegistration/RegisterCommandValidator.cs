@@ -10,9 +10,7 @@ namespace bms.Application.Features.UserRegistration
                 .NotEmpty()
                 .WithMessage("Username is required.")
                 .Length(3, 50)
-                .WithMessage("Username must be between 3 and 50 characters.")
-                .Matches("^[a-zA-Z0-9._-]+$")
-                .WithMessage("Username can only contain letters, numbers, dots, underscores, and hyphens.");
+                .WithMessage("Username must be between 3 and 50 characters.");
 
             RuleFor(x => x.Password)
                 .NotEmpty()

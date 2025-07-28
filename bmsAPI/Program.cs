@@ -41,10 +41,12 @@ try
     {
         options.AddPolicy("ReactClient",
             corsPolicyBuilder => corsPolicyBuilder
-                .WithOrigins("http://localhost:5173")
+                .WithOrigins("http://localhost:5173",
+                    "https://localhost:5173"
+                )
                 .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials());
+                .AllowAnyHeader());
+        // .AllowCredentials());
     });
 
     // Configure Serilog with Seq from appsettings
@@ -83,9 +85,6 @@ try
             diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"]);
         };
     });
-
-    // Apply CORS policy
-    app.UseCors("ReactClient");
 
     // seed roles and admin user
     //using (var scope = app.Services.CreateScope())

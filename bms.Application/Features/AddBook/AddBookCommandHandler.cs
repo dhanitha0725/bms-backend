@@ -8,7 +8,6 @@ namespace bms.Application.Features.AddBook
 {
     public class AddBookCommandHandler(
         IGenericRepository<Book, Guid> bookRepository,
-        IGenericRepository<User, Guid> userRepository,
         ILogger logger) 
         : IRequestHandler<AddBookCommand, Result<Guid>>
     {
@@ -18,6 +17,16 @@ namespace bms.Application.Features.AddBook
         {
             try
             {
+                // Check if a book with the same title already exists
+                var bookExists = await bookRepository.AnyAsync(
+                    b => b.Title.ToLower() == request.Title.ToLower(),
+                    cancellationToken);
+
+                if (bookExists)
+                {
+                    return Result<Guid>.Failure(new Error("A book with this title already exists"));
+                }
+
                 // Create the book entity
                 var book = new Book
                 {

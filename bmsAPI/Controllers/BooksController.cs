@@ -1,6 +1,7 @@
 using bms.Application.Features.AddBook;
 using bms.Application.Features.DeleteBook;
 using bms.Application.Features.GetAllBooks;
+using bms.Application.Features.GetBookById;
 using bms.Application.Features.UpdateBook;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +25,7 @@ namespace bmsAPI.Controllers
                 return BadRequest(result.Error?.Message);
             }
 
-            return Ok(new { bookId = result.Value, message = "Book added successfully" });
+            return Ok(new { bookId = result.Value });
         }
 
         [HttpGet("get-all-books")]
@@ -38,11 +39,25 @@ namespace bmsAPI.Controllers
                 return BadRequest(new { error = result.Error?.Message });
             }
 
-            return Ok(new { 
-                books = result.Value,
-                count = result.Value?.Count() ?? 0,
-                message = "Books retrieved successfully"
-            });
+            return Ok(new { books = result.Value});
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBookById(Guid id)
+        {
+            var query = new GetBookByIdQuery
+            {
+                BookId = id
+            };
+
+            var result = await mediator.Send(query);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(new { error = result.Error?.Message });
+            }
+
+            return Ok(new { book = result.Value });
         }
 
         [HttpPut("{id}")]
